@@ -1,5 +1,14 @@
 This is a repo for testing purposes. Testing deployment via Render using a Dockerfile and deployment directly from the repo.
 
+# Starting Out:
+1. Run `pip install -r requirement.txt` at the root of this project folder
+2. Run `pipenv shell` to enter the virtual environment
+3. Run `flask db migrate && flask db upgrade && flask seed all` to prep your database
+4. Run `flask run` to start the backend
+5. Change directory to "/react-vite"...
+    1. Run `npm install` and `npm run build`
+    2. Run `npm run dev` to run on local. To run preview of production, run `npm run preview`
+
 
 # Deployment via Repo:
 - Environment variables needed on Render:
