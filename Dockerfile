@@ -6,7 +6,7 @@ FROM python:3.9.18-alpine3.18
 
 WORKDIR /var/www
 
-RUN useradd -ms /bin/bash python-docker-deployer
+RUN useradd python-docker-deployer
 USER python-docker-deployer
 
 COPY requirements.txt requirements.txt
