@@ -1,8 +1,8 @@
-"""reset migrations
+"""test migration docker
 
-Revision ID: 6cb628ca3277
+Revision ID: ca499d22c2d6
 Revises: 
-Create Date: 2024-12-08 02:54:16.435676
+Create Date: 2024-12-10 17:02:10.188301
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6cb628ca3277'
+revision = 'ca499d22c2d6'
 down_revision = None
 branch_labels = None
 depends_on = None
