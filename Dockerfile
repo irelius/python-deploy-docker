@@ -22,8 +22,8 @@ RUN pip install --upgrade pip
 
 COPY . .
 
-RUN flask db init
-RUN flask db migrate -m 'first docker migration'
+# RUN flask db init
+# RUN flask db migrate -m 'first docker migration'
 RUN flask db upgrade
 RUN flask seed all
 
