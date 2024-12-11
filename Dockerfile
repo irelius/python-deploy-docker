@@ -4,14 +4,13 @@
 
 FROM python:3.9.18-alpine3.18
 
-ENV FLASK_APP=${FLASK_APP}
-ENV FLASK_DEBUG=${FLASK_DEBUG}
-ENV FLASK_RUN_PORT=${FLASK_RUN_PORT}
-ENV FLASK_ENV=${FLASK_ENV}
+ARG FLASK_APP
+ARG FLASK_DEBUG
+ARG FLASK_ENV
 
-ENV SECRET_KEY=${SECRET_KEY}
-ENV SCHEMA=${SCHEMA}
-ENV DATABASE_URL=${DATABASE_URL}
+ARG SECRET_KEY
+ARG SCHEMA
+ARG DATABASE_URL
 
 WORKDIR /var/www
 
@@ -23,7 +22,7 @@ RUN pip install --upgrade pip
 COPY . .
 
 RUN flask db init
-RUN flask db migrate -m 'first docker migration'
+RUN flask db migrate
 RUN flask db upgrade
 RUN flask seed all
 
