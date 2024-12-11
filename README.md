@@ -27,12 +27,9 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
     - `FLASK_DEBUG`
         - Set to true
 - The Dockerfile will handle the building of the project
-    - Note: the ".dockerignore" file includes the "migration" folder, so the steps of initializing, migrating, and upgrading the database is necessary in the Dockerfile
-        - If "migrations" is removed from the ".dockerignore" file, you can also remove the `flask db init` and `flask db migrate` commands from the Dockerfile
-            - The upgrade and seeding is still necessary
 - To build a Docker image locally...
-    - Use this command: `docker build --build-arg SCHEMA=<use your schema> --build-arg DATABASE_URL=<use the external database url of your postgres database> --build-arg SECRET_KEY=<secret key you generate> .`
-    - Because the Dockerfile runs flask commands to initialize, migrate, and upgrade database, it must access the SCHEMA and DATABASE_URL values while building
+    - Use this command template: `docker build --build-arg SCHEMA=<use your schema> --build-arg DATABASE_URL=<use the external database url of your postgres database> --build-arg SECRET_KEY=<secret key you generate> .`
+    - Because the Dockerfile runs flask commands to upgrade and seed your database, it must access the SCHEMA and DATABASE_URL values while building
         - But the values are provided by the environment variable, which is only provided by you after telling Docker to build the file (there's an order bug)
         - The command template provided above will allow you to pass in ARGs while building
     - You could hard code the values directly into the Dockerfile but be careful that you don't push any sensitive info to your repo
@@ -51,9 +48,7 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
         - Establish an ARG and ENV variable. Don't provide a default to ARG, but set a default variable value to the ENV (see Docker file for clarification)
     - `DATABASE_URL`
         - Establish an ARG and ENV variable. Don't provide a default to ARG, but set a default variable value to the ENV (see Docker file for clarification)
-- As mentioned above, Dockerfile runs `flask db init` and `flask db migrate` because the "migrations" folder is included in the ".dockerignore" file
-    - If you remove "migrations" from the ignore file, you should also remove the initialization and migration commands as they are unnecessary
-    - Test
+- `flask db upgrade` and `flask seed all` used to populate the postgres database
 
 <br></br>
 
