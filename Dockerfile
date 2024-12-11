@@ -4,10 +4,11 @@
 
 FROM python:3.9.18-alpine3.18
 
+RUN adduser -D python-docker-deployer
+USER python-docker-deployer
+
 WORKDIR /var/www
 
-RUN useradd python-docker-deployer
-USER python-docker-deployer
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
