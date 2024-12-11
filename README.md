@@ -30,6 +30,22 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
     - Note: the ".dockerignore" file includes the "migration" folder, so the steps of initializing, migrating, and upgrading the database is necessary in the Dockerfile
         - If "migrations" is removed from the ".dockerignore" file, you can also remove the `flask db init` and `flask db migrate` commands from the Dockerfile
             - The upgrade and seeding is still necessary
+- To build a Docker image locally...
+    - Use this command: `docker build --build-arg SCHEMA=<use your schema> --build-arg DATABASE_URL=<use the external database url of your postgres database> .`
+    - Because the Dockerfile runs flask commands to initialize, migrate, and upgrade database, it must access the SCHEMA and DATABASE_URL values while building
+        - But the values are provided by the environment variable, which is only provided by you after telling Docker to build the file (there's an order bug)
+        - The command template provided above will allow you to pass in ARGs while building
+    - You could hard code the values directly into the Dockerfile but be careful that you don't push any sensitive info to your repo
+
+<br></br>
+
+# Dockerfile:
+- Needed variables on Dockerfile:
+    - `FLASK_APP`
+    - `FLASK_ENV`
+    - `SECRET_KEY`
+    - `SCHEMA`
+    - `DATABASE_URL`
 
 <br></br>
 
@@ -41,6 +57,4 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
 - Development python version is 3.9.4
 - Development pip version is 24.3.1
 - Development pyenv version is 2.4.20
-
-
 

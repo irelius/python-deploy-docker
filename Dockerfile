@@ -4,20 +4,25 @@
 
 FROM python:3.9.18-alpine3.18
 
-ARG FLASK_APP
-ARG FLASK_DEBUG
-ARG FLASK_ENV
-
-ARG SECRET_KEY
-ARG SCHEMA
-ARG DATABASE_URL
-
 WORKDIR /var/www
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 RUN pip install psycopg2-binary
 RUN pip install --upgrade pip
+
+# ENV for variables for future environment variables
+    # Can provide a default value, but can be changed
+# ARG for variables that not available after image is built
+    # Running container cannot access an ARG value    
+ARG FLASK_APP=app
+ARG FLASK_ENV=production
+
+ARG SCHEMA
+ENV SCHEMA=${SCHEMA}
+
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 
 COPY . .
 
