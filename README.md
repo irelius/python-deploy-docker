@@ -53,7 +53,7 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
         - Establish an ARG and ENV variable. Don't provide a default to ARG, but set a default variable value to the ENV (see Docker file for clarification)
 - As mentioned above, Dockerfile runs `flask db init` and `flask db migrate` because the "migrations" folder is included in the ".dockerignore" file
     - If you remove "migrations" from the ignore file, you should also remove the initialization and migration commands as they are unnecessary
-    - 
+    - Test
 
 <br></br>
 
