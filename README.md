@@ -31,7 +31,7 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
         - If "migrations" is removed from the ".dockerignore" file, you can also remove the `flask db init` and `flask db migrate` commands from the Dockerfile
             - The upgrade and seeding is still necessary
 - To build a Docker image locally...
-    - Use this command: `docker build --build-arg SCHEMA=<use your schema> --build-arg DATABASE_URL=<use the external database url of your postgres database> .`
+    - Use this command: `docker build --build-arg SCHEMA=<use your schema> --build-arg DATABASE_URL=<use the external database url of your postgres database> --build-arg SECRET_KEY=<secret key you generate> .`
     - Because the Dockerfile runs flask commands to initialize, migrate, and upgrade database, it must access the SCHEMA and DATABASE_URL values while building
         - But the values are provided by the environment variable, which is only provided by you after telling Docker to build the file (there's an order bug)
         - The command template provided above will allow you to pass in ARGs while building
@@ -42,18 +42,27 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
 # Dockerfile:
 - Needed variables on Dockerfile:
     - `FLASK_APP`
+        - Set to "app", hardcoding is ok
     - `FLASK_ENV`
-    - `SECRET_KEY`
+        - Set to "production", hardcoding is ok
     - `SCHEMA`
+        - Establish an ARG and ENV variable. Don't provide a default to ARG, but set a default variable value to the ENV (see Docker file for clarification)
+    - `SECRET_KEY`
+        - Establish an ARG and ENV variable. Don't provide a default to ARG, but set a default variable value to the ENV (see Docker file for clarification)
     - `DATABASE_URL`
+        - Establish an ARG and ENV variable. Don't provide a default to ARG, but set a default variable value to the ENV (see Docker file for clarification)
+- As mentioned above, Dockerfile runs `flask db init` and `flask db migrate` because the "migrations" folder is included in the ".dockerignore" file
+    - If you remove "migrations" from the ignore file, you should also remove the initialization and migration commands as they are unnecessary
+    - 
 
 <br></br>
 
 ## Notes:
 - There's some issue with having multiple flask projects on one postgres database from my tests. It could be that my testing methodology is flawed, but having multiple flask projects with differing alembic identifiers seems to be causing an issue with the downgrade function
-- To reset your alembic history, enter your postgres database with your PSQL command and run `DELETE FROm alembic_history;`
+- To reset your alembic history, enter your postgres database with your PSQL command and run `DELETE FROM alembic_history;`
     - This will clear your alembic history and you can deploy either your Dockerfile project or directly from your repo
-- "psycopg2-binary" was added to Pipfile, version "2.9.10". Probably not needed. idk why i added it
+- "psycopg2-binary" was added to requirements.txt file, version "2.9.10"
+    - This means that it is not a separate package to be installed in a separate command
 - Development python version is 3.9.4
 - Development pip version is 24.3.1
 - Development pyenv version is 2.4.20

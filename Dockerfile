@@ -8,7 +8,6 @@ WORKDIR /var/www
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-RUN pip install psycopg2-binary
 RUN pip install --upgrade pip
 
 # ENV for variables for future environment variables
@@ -21,13 +20,16 @@ ARG FLASK_ENV=production
 ARG SCHEMA
 ENV SCHEMA=${SCHEMA}
 
+ARG SECRET_KEY
+ENV SECRET_KEY=${SECRET_KEY}
+
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
 COPY . .
 
-RUN flask db init
-RUN flask db migrate
+# RUN flask db init
+# RUN flask db migrate
 RUN flask db upgrade
 RUN flask seed all
 
