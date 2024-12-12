@@ -62,3 +62,5 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
 - Development pip version is 24.3.1
 - Development pyenv version is 2.4.20
 
+- Ideally, create a docker image and deploy with that image rather than deploying with dockerfile on Render
+    - Probably because they use the dockerfile to create their own image?
