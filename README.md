@@ -56,7 +56,7 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
 ## Notes:
 - There's some issue with having multiple flask projects on one postgres database from my tests. It could be that my testing methodology is flawed, but having multiple flask projects with differing alembic identifiers seems to be causing an issue with the downgrade function
 - To reset your alembic history, enter your postgres database with your PSQL command and run `DELETE FROM alembic_version;`
-    - This will clear your alembic history and you can deploy either your Dockerfile project or directly from your repo
+    - This will clear your alembic version history and you can deploy either your Dockerfile project or directly from your repo
 - "psycopg2-binary" was added to requirements.txt file, version "2.9.10"
     - This means that it is not a separate package to be installed in a separate command
 - Development python version is 3.9.4
