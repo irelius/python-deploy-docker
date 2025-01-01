@@ -27,7 +27,8 @@ ENV DATABASE_URL=${DATABASE_URL}
 
 COPY . .
 
-RUN flask db upgrade && flask seed all
+RUN flask db upgrade
+RUN flask seed all
 
 
 CMD ["gunicorn", "app:app"]

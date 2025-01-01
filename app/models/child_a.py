@@ -5,7 +5,6 @@ class Child_A(db.Model):
     __tablename__ = 'child_a'
     
     if environment == "production":
-        print('production conditional child_a', SCHEMA)
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
