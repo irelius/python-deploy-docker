@@ -1,10 +1,10 @@
 This is a repo for testing purposes. This repo deploys to Render using the Dockerfile. Click [here](https://github.com/irelius/python-deploy-docker) to see the repo that deploys using Docker.
 
-# <b>IMPORTANT TO NOTE</b>: <br></br> I have set the "FLASK_ENV" value in the .flaskenv file to "production". This choice is explained later under the <a href="#dockerfile-deployment">"Deployment via Dockerfile"</a> section
+## <b>IMPORTANT TO NOTE</b>: <br></br> "FLASK_ENV" in the .flaskenv file is set to "production". This choice is explained later under the <a href="#dockerfile-deployment">"Deployment via Dockerfile"</a> section
 
 <br></br>
 
-# Running Locally:
+## Running Locally:
 1. Run `pip install -r requirement.txt` at the root of this project folder
 2. Run `pipenv shell` to enter the virtual environment
 3. Run `flask db upgrade && flask seed all` to prep your database
@@ -17,8 +17,8 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
 
 <br></br>
 
-# Deployment via Dockerfile:
-## Environment variables needed on **Render**:
+## Deployment via Dockerfile:
+### Environment variables needed on **Render**:
   - `DATABASE_URL`
     - Get from postgres database service. Use external database url
   - `FLASK_APP`
@@ -30,7 +30,7 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
   - `SECRET_KEY`
     - A random string of characters. Do not share. It's a secret
     
-## Dockerfile Deployment
+### Dockerfile Deployment
 - When you run `flask db migrate` you create a migration file. This is created on your local computer (which is probably has FLASK_ENV set to "development")
 - When you push your project, you're pushing up the migration file that was created under the "development" environment
     - This migration file will be missing the "schema" option, explanation in the next few bullet points
@@ -46,20 +46,23 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
         - Issue: This is not recommended. You should have a unique schema for each project and it shouldn't exist on the "public" schema. Not best practice
     2. Solution 2 - Add "migrations" to your .dockerignore file and then add "flask db init" and "flask db migrate" to your Dockerfile so that it generates a new migration file when it's run during deployment
         - Issue: The migration version you have on deployment would be different than the one you keep locally. My instinct tells me that there are more problems to this solution, but I don't know for sure
+        - Issue: You would also need to run the following in your PSQL shell: `DELETE FROM alembic_version; DROP SCHEMA <schema name> CASCADE; CREATE SCHEMA <schema name>;`
     3. Solution 3 - Change the "FLASK_ENV" variable in your .flaskenv file to "production" and change the "DATABASE_URL" variable in your .env file to the External Database URL from Render, and then run the commands to migrate, upgrade and seed in your terminal
+        - Another benefit is that you can unseed, downgrade, delete your migration folder, run `flask db init`, `flask db migrate`, `flask db upgrade`, and `flask seed all`, and it will directly change the Postgres database and alembic version
         - Issue: You would need to change between "development" and "production" and change your DATABASE_URL between "sqlite:///dev.db" and the external database url anytime you needed to change the migration version file
-- Method 2 or 3 is your best bet (method 3 kinda seems like the easiest?), but either way, you would still run the following in your PSQL shell: `DELETE FROM alembic_version; DROP SCHEMA <schema name> CASCADE; CREATE SCHEMA <schema name>;`
-    - The schema needs to exist in the Postgres database before you try to deploy (maybe a way to customize the Dockerfile to do this?), and if your migration file's alembic version is different from what is kept in your Postgres databases's alembic_version, it would cause an error (again, maybe a way to clear the alembic_version in the Dockerfile?)
+- Method 2 or 3 is your best bet (method 3 kinda seems like the easiest?)
+- Note: The schema needs to exist in the Postgres database before you try to deploy (maybe a way to customize the Dockerfile to do this?), and if your migration file's alembic version is different from what is kept in your Postgres databases's alembic_version, it would cause an error (again, maybe a way to clear the alembic_version in the Dockerfile?)
+    - To reset your alembic_version and schema, use the PSQL command and run `DELETE FROM alembic_version; DROP SCHEMA <schema name> CASCADE; CREATE SCHEMA <schema name>;`
     - Still need to figure out how to keep alembic version number with the schema instead of "public"
         - This would allow for multiple sqlalchemy projects to be kept in the postgres database
 
-## Note:
+### Note:
 - Any Foreignkeys listed in the model files for parent-child relationships will need to reference the "SCHEMA" value as well as that is how Postgres works
     - Any table is referred as: `<schema name>.<table name>`
     - Ex: If you have a table called "jazz" under the "music" schema, you'd refer to it with "music.jazz"
         - This is where the "add_prefix_for_prod" function comes in handy. It does it for you automatically. See model files for concrete example
 
-## Dockerfile Local
+### Dockerfile Local
 - To build a Docker image locally...
     - Use this command template: `docker build --build-arg SCHEMA=<use your schema> --build-arg DATABASE_URL=<use the external database url of your postgres database> --build-arg SECRET_KEY=<secret key you generate> .`
         - Fill in the values in the `<>`
@@ -70,7 +73,7 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
 
 <br></br>
 
-# Dockerfile Explanation:
+## Dockerfile Explanation:
 1. Use the python3.9.18 image
     - Could use different image, but I haven't experimented with this
 2. Set work directory to `/var/www`
@@ -100,7 +103,7 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
 
 <br></br>
 
-## Notes:
+### Notes:
 - Still trying to figure out how to attach the alembic_version to a specific schema name
     - Currently, you can only have 1 sqlalchemy project in your postgres database because having multiple would generate their own unique alembic version numbers, and that will cause a conflict
 - To reset your alembic history, enter your postgres database with your PSQL command and run `DELETE FROM alembic_version;`

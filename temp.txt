@@ -1,0 +1,2 @@
+SELECT mtm_children.id AS mtm_children_id, mtm_children.mtm_child_col AS mtm_children_mtm_child_col 
+FROM mtm_children JOIN mtm_parent_children ON mtm_children.id = mtm_parent_children.mtm_child_join_id JOIN mtm_parents ON mtm_parents.id = mtm_parent_children.mtm_parent_join_id

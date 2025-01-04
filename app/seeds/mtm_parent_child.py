@@ -6,7 +6,7 @@ def seed_mtm_parent_child():
 
     for parent in range(0, how_many_parents):
         for child in range(parent, how_many_children):
-            template = MTM_Parent_Child(mtm_parent_join_id=parent+1, mtm_child_join_id=child+1, mtm_extra_data=f"join table extra data for {parent}:{child}")
+            template = MTM_Parent_Child(mtm_parent_join_id=parent+1, mtm_child_join_id=child+1, mtm_extra_data=f"join table extra data for {parent+1}:{child+1}")
             
             # # seed command if "secondary" option was used. Refer to MODEL_README.md for more information
             # template = MTM_Parent_Child(mtm_parent_join_id=parent+1, mtm_child_join_id=child+1)
