@@ -46,7 +46,7 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
         - Issue: This is not recommended. You should have a unique schema for each project and it shouldn't exist on the "public" schema. Not best practice
     2. Solution 2 - Add "migrations" to your .dockerignore file and then add "flask db init" and "flask db migrate" to your Dockerfile so that it generates a new migration file when it's run during deployment
         - Issue: The migration version you have on deployment would be different than the one you keep locally. My instinct tells me that there are more problems to this solution, but I don't know for sure
-        - Issue: You would also need to run the following in your PSQL shell: `DELETE FROM alembic_version; DROP SCHEMA <schema name> CASCADE; CREATE SCHEMA <schema name>;`
+        - Issue: You would also need to run the following in your PSQL shell before every push to main/deployment attempt: `DELETE FROM alembic_version; DROP SCHEMA <schema name> CASCADE; CREATE SCHEMA <schema name>;`
     3. Solution 3 - Change the "FLASK_ENV" variable in your .flaskenv file to "production" and change the "DATABASE_URL" variable in your .env file to the External Database URL from Render, and then run the commands to migrate, upgrade and seed in your terminal
         - Another benefit is that you can unseed, downgrade, delete your migration folder, run `flask db init`, `flask db migrate`, `flask db upgrade`, and `flask seed all`, and it will directly change the Postgres database and alembic version
         - Issue: You would need to change between "development" and "production" and change your DATABASE_URL between "sqlite:///dev.db" and the external database url anytime you needed to change the migration version file
