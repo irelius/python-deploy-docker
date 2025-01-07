@@ -27,6 +27,7 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
     - Set to "production"
   - `SCHEMA`
     - Something short, concise, and descriptive of the project
+    - As this is a python project, use snake_case
   - `SECRET_KEY`
     - A random string of characters. Do not share. It's a secret
     
@@ -52,10 +53,24 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
         - Issue: You would need to change between "development" and "production" and change your DATABASE_URL between "sqlite:///dev.db" and the external database url anytime you needed to change the migration version file
             - If you don't change to "development" and you make changes to your database, then it will directly impact the production level database (which is not good)
 - Method 2 or 3 is your best bet (method 3 kinda seems like the easiest?)
-- Note: The schema needs to exist in the Postgres database before you try to deploy (maybe a way to customize the Dockerfile to do this?), and if your migration file's alembic version is different from what is kept in your Postgres databases's alembic_version, it would cause an error (again, maybe a way to clear the alembic_version in the Dockerfile?)
-    - To reset your alembic_version and schema, use the PSQL command and run `DELETE FROM alembic_version; DROP SCHEMA <schema name> CASCADE; CREATE SCHEMA <schema name>;`
-    - Still need to figure out how to keep alembic version number with the schema instead of "public"
-        - This would allow for multiple sqlalchemy projects to be kept in the postgres database
+- Note 1: While creating the migration file under the "production" environment fixes where the model/seeder files will look at during deployment, your migration version number will still be stored under the "public" schema
+    - To update this and store it under your schema name...
+        1. Go to your migraionts/env.py file (after you created the migration file)
+        2. Add the following two lines to the top of the file:
+            ```
+            import os
+            schema_name = os.environ.get('SCHEMA')
+            ```
+        3. Scroll down to the `run_migrations_online` function and edit the `context.configure` function to include the following:
+            ```
+            version_table="alembic_version",
+            version_table_schema=schema_name
+            ```
+            - See the migrations/env.py file to see a more concrete example
+    - This does mean that you'd need to add those lines if you were to delete your migration file and recreate it for whatever reason
+- Note 2: The schema needs to exist in the Postgres database before you try to deploy (maybe a way to customize the Dockerfile to do this?), and if your migration file's alembic version is different from what is kept in your Postgres databases's alembic_version, it would cause an error (again, maybe a way to clear the alembic_version in the Dockerfile?)
+    - If you've taken the steps to store the alembic_version number under the schema name rather than "public", then you can just run `DROP SCHEMA <schema name> CASCADE; CREATE SCHEMA <schema name>;`
+    - If the alembic version number is generated under "public", use the PSQL command and run `DELETE FROM alembic_version; DROP SCHEMA <schema name> CASCADE; CREATE SCHEMA <schema name>;` to reset both the alembic_version and schema
 
 ### Note:
 - Any Foreignkeys listed in the model files for parent-child relationships will need to reference the "SCHEMA" value as well as that is how Postgres works
@@ -105,10 +120,9 @@ This is a repo for testing purposes. This repo deploys to Render using the Docke
 <br></br>
 
 ### Notes:
-- Still trying to figure out how to attach the alembic_version to a specific schema name
-    - Currently, you can only have 1 sqlalchemy project in your postgres database because having multiple would generate their own unique alembic version numbers, and that will cause a conflict
 - To reset your alembic history, enter your postgres database with your PSQL command and run `DELETE FROM alembic_version;`
   - This will clear your alembic version history and you can deploy either your Dockerfile project or directly from your repo
+  - If you've edited your migraionts/env.py file to specify the schema name for your alembic_version table, then run `DELETE FROM <your schema name>.alembic_version;`
 - "psycopg2-binary" was added to requirements.txt file, version "2.9.10"
   - This means that it is not a separate package to be installed in a separate command
 - Development python version is 3.9.4

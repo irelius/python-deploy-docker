@@ -14,7 +14,8 @@ class MTM_Child(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
-            "mtm_child_col": self.mtm_child_col
+            "mtm_child_col": self.mtm_child_col,
+            "mtm_parents": {parent.mtm_parent_join_id: parent.to_dict() for parent in self.mtm_parent_relationship}
         }
 
 

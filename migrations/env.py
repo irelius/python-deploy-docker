@@ -67,6 +67,10 @@ def run_migrations_offline():
         context.run_migrations()
 
 
+# Add this so that the alembic version number will be stored under the schema name
+import os
+schema_name = os.environ.get('SCHEMA')
+
 def run_migrations_online():
     """Run migrations in 'online' mode.
 
@@ -92,7 +96,11 @@ def run_migrations_online():
             connection=connection,
             target_metadata=get_metadata(),
             process_revision_directives=process_revision_directives,
-            **current_app.extensions['migrate'].configure_args
+            **current_app.extensions['migrate'].configure_args,
+            
+            # add the following two lines that will use the schema name to generate the alembic_version number under
+            version_table="alembic_version",
+            version_table_schema=schema_name
         )
 
         with context.begin_transaction():
