@@ -57,9 +57,7 @@ def run_migrations_offline():
     Calls to context.execute() here emit the given string to the
     script output.
 
-    """
-    print("BOOBA offline")
-    
+    """    
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url, target_metadata=get_metadata(), literal_binds=True,
@@ -76,8 +74,6 @@ import os
 schema_name = os.environ.get("SCHEMA")
 
 def run_migrations_online():
-    print("BOOBA online") 
-    
     """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine
