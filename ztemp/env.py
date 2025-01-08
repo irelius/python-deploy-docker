@@ -58,15 +58,9 @@ def run_migrations_offline():
     script output.
 
     """
-    print("BOOBA offline")
-    
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url, target_metadata=get_metadata(), literal_binds=True,
-        
-        # add the following two lines that attach the schema name to the generated alembic_version number
-        version_table="alembic_version",
-        version_table_schema=schema_name
+        url=url, target_metadata=get_metadata(), literal_binds=True
     )
 
     with context.begin_transaction():
@@ -76,8 +70,6 @@ import os
 schema_name = os.environ.get("SCHEMA")
 
 def run_migrations_online():
-    print("BOOBA online") 
-    
     """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine
@@ -108,8 +100,6 @@ def run_migrations_online():
             version_table="alembic_version",
             version_table_schema=schema_name
         )
-
-        connection.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name};")
 
         with context.begin_transaction():
             context.run_migrations()
