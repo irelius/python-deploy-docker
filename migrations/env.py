@@ -91,36 +91,6 @@ def run_migrations_online():
 
     connectable = get_engine()
     
-    # if environment == "production":
-    #     with connectable.connect() as connection:
-    #         context.configure(
-    #             connection=connection,
-    #             target_metadata=get_metadata(),
-    #             process_revision_directives=process_revision_directives,
-    #             **current_app.extensions['migrate'].configure_args,
-                
-    #             # add the following two lines that attach the schema name to the generated alembic_version number
-    #             version_table="alembic_version",
-    #             version_table_schema=schema_name
-    #         )
-            
-    #         if environment == "production":
-    #             connection.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
-            
-    #         with context.begin_transaction():
-    #             context.run_migrations()
-    # else:
-    #     with connectable.connect() as connection:
-    #         context.configure(
-    #             connection=connection,
-    #             target_metadata=get_metadata(),
-    #             process_revision_directives=process_revision_directives,
-    #             **current_app.extensions['migrate'].configure_args,
-    #         )
-
-    #         with context.begin_transaction():
-    #             context.run_migrations()
-    
     with connectable.connect() as connection:
         context.configure(
             connection=connection,
@@ -131,7 +101,6 @@ def run_migrations_online():
         
         with context.begin_transaction():
             if environment == "production":
-                print('BOOBA')
                 connection.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
                 context.execute(f"SET search_path TO {schema_name}")
             context.run_migrations()
