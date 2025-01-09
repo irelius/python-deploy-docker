@@ -25,7 +25,7 @@ If you were to reset the database (delete the "migrations" and "instance" folder
    1. Put the following at the top of the file:
       ```
       import os
-      environment = os.get.env("FLASK_ENV")
+      environment = os.getenv("FLASK_ENV")
       schema_name = os.environ.get("SCHEMA")
       ```
       - This will just enable the file to access the SCHEMA value in the environment variables
@@ -41,7 +41,7 @@ If you were to reset the database (delete the "migrations" and "instance" folder
    1. At the top of the newly generated migration version file, add the following at the top the file:
       ```
       import os
-      environment = os.get.env("FLASK_ENV")
+      environment = os.getenv("FLASK_ENV")
       schema_name = os.environ.get("SCHEMA")
       ```
       - This allows the file to access the FLASK_ENV and SCHEMA values from your ".flaskenv" and ".env" file respectively
