@@ -57,20 +57,18 @@ def run_migrations_offline():
     Calls to context.execute() here emit the given string to the
     script output.
 
-    """    
+    """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url, target_metadata=get_metadata(), literal_binds=True,
-        
-        # add the following two lines that attach the schema name to the generated alembic_version number
-        version_table="alembic_version",
-        version_table_schema=schema_name
+        url=url, target_metadata=get_metadata(), literal_binds=True
     )
 
     with context.begin_transaction():
         context.run_migrations()
 
+
 import os
+environment = os.getenv("FLASK_ENV")
 schema_name = os.environ.get("SCHEMA")
 
 def run_migrations_online():
@@ -92,23 +90,51 @@ def run_migrations_online():
                 logger.info('No changes in schema detected.')
 
     connectable = get_engine()
+    
+    # if environment == "production":
+    #     with connectable.connect() as connection:
+    #         context.configure(
+    #             connection=connection,
+    #             target_metadata=get_metadata(),
+    #             process_revision_directives=process_revision_directives,
+    #             **current_app.extensions['migrate'].configure_args,
+                
+    #             # add the following two lines that attach the schema name to the generated alembic_version number
+    #             version_table="alembic_version",
+    #             version_table_schema=schema_name
+    #         )
+            
+    #         if environment == "production":
+    #             connection.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
+            
+    #         with context.begin_transaction():
+    #             context.run_migrations()
+    # else:
+    #     with connectable.connect() as connection:
+    #         context.configure(
+    #             connection=connection,
+    #             target_metadata=get_metadata(),
+    #             process_revision_directives=process_revision_directives,
+    #             **current_app.extensions['migrate'].configure_args,
+    #         )
 
+    #         with context.begin_transaction():
+    #             context.run_migrations()
+    
     with connectable.connect() as connection:
         context.configure(
             connection=connection,
             target_metadata=get_metadata(),
             process_revision_directives=process_revision_directives,
             **current_app.extensions['migrate'].configure_args,
-            
-            # add the following two lines that attach the schema name to the generated alembic_version number
-            version_table="alembic_version",
-            version_table_schema=schema_name
         )
-
-        connection.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name};")
-
+        
         with context.begin_transaction():
+            if environment == "production":
+                connection.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
+                context.execute(f"SET search_path TO {schema_name}")
             context.run_migrations()
+
 
 
 if context.is_offline_mode():
