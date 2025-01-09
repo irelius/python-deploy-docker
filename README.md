@@ -25,7 +25,8 @@ If you were to reset the database (delete the "migrations" and "instance" folder
    1. Put the following at the top of the file:
       ```
       import os
-      schema_name = os.environ.get("SCHEMA)
+      environment = os.get.env("FLASK_ENV")
+      schema_name = os.environ.get("SCHEMA")
       ```
       - This will just enable the file to access the SCHEMA value in the environment variables
    2. Then, and under the `run_migrations_online` function, edit the `context.begin_transaction` function to include:
