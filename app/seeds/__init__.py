@@ -21,25 +21,25 @@ seed_commands = AppGroup('seed')
 def seed():
     if environment == 'production':
         undo_mtm_parent_child()
-        undo_mtm_child()
-        undo_mtm_parent()
         
         undo_child_b()
-        undo_parent_b()
         undo_child_a()
-        undo_parent_a()
         
         undo_users()
+        undo_parent_b()
+        undo_parent_a()
+        undo_mtm_parent()
+        undo_mtm_child()
         
+    seed_mtm_child()
+    seed_mtm_parent()
+    seed_parent_a()
+    seed_parent_b()
     seed_users()
     
-    seed_parent_a()
     seed_child_a()
-    seed_parent_b()
     seed_child_b()
     
-    seed_mtm_parent()
-    seed_mtm_child()
     seed_mtm_parent_child()
     # Add other seed functions here
 
@@ -48,13 +48,13 @@ def seed():
 @seed_commands.command('undo')
 def undo():
     undo_mtm_parent_child()
-    undo_mtm_child()
-    undo_mtm_parent()
     
     undo_child_b()
-    undo_parent_b()
     undo_child_a()
-    undo_parent_a()
     
     undo_users()
+    undo_parent_b()
+    undo_parent_a()
+    undo_mtm_parent()
+    undo_mtm_child()
     # Add other undo functions here

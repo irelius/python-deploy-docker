@@ -131,6 +131,7 @@ def run_migrations_online():
         
         with context.begin_transaction():
             if environment == "production":
+                print('BOOBA')
                 connection.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
                 context.execute(f"SET search_path TO {schema_name}")
             context.run_migrations()

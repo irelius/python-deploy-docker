@@ -1,4 +1,4 @@
-from app.models import db, MTM_Parent_Child, environment, SCHEMA
+from app.models import db, MTM_Parent_Child, environment, SCHEMA, add_prefix_for_prod
 
 def seed_mtm_parent_child():
     how_many_parents = 3
@@ -13,6 +13,7 @@ def seed_mtm_parent_child():
             
             db.session.add(template)
             
+
     db.session.commit()
             
 

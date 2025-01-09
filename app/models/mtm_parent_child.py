@@ -4,7 +4,7 @@ from .db import db, environment, SCHEMA, add_prefix_for_prod
 class MTM_Parent_Child(db.Model):
     __tablename__ = 'mtm_parent_children'
     
-    if environment == "prsoduction":
+    if environment == "production":
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
